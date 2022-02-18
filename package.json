@@ -1,0 +1,32 @@
+{
+  "name": "elgato-light-cli",
+  "version": "1.0.0",
+  "description": "CLI to control Elgato Light",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KyleMit/elgato-light-cli.git"
+  },
+  "keywords": [
+    "elgato",
+    "keylight",
+    "light",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KyleMit/elgato-light-cli/issues"
+  },
+  "homepage": "https://github.com/KyleMit/elgato-light-cli#readme",
+  "dependencies": {
+    "@types/bonjour": "^3.5.10",
+    "bonjour": "^3.5.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.5.0"
+  }
+}
