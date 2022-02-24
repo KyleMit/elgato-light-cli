@@ -1,31 +1,30 @@
-import bonjour from 'bonjour';
+#!/usr/bin/env ts-node-script
+import { getArgAction } from './cli';
+import { intervalBrightness, minBrightness, maxBrightness, intervalTemperature, minTemperature, maxTemperature } from './config';
+import { updateLights, printStatus } from './elgato';
+import { ActionTypes, TransformFunc } from './types';
 
 main()
 
 async function main() {
-    const bonjourClient = bonjour();
-    const browser = bonjourClient.find({ type: 'elg' }, (service) => {
-        console.log(service)
-    });
 
-    browser.on('up', (service) => {
+    const argInfo = getArgAction()
 
-        var info = {
-            ip: service['referer'].address,
-            port: service.port
+    if (argInfo.isTransform) {
+        const lightTransformLookup: Partial<Record<ActionTypes, TransformFunc>> = {
+            [ActionTypes.off]: l => ({on: 0}),
+            [ActionTypes.on]: l => ({ on: 1 }),
+            [ActionTypes.dim]: l => ({ brightness: Math.max(l.brightness - intervalBrightness, minBrightness) }),
+            [ActionTypes.brighten]: l => ({ brightness: Math.min(l.brightness + intervalBrightness, maxBrightness) }),
+            [ActionTypes.colder]: l => ({ temperature: Math.max(l.temperature - intervalTemperature, minTemperature) }),
+            [ActionTypes.warmer]: l => ({ temperature: Math.min(l.temperature + intervalTemperature, maxTemperature) })
         }
 
-        console.log(info)
-
-        bonjourClient.destroy();
-    });
-    //browser.start();
-
-    await new Promise(r => setTimeout(r, 2000));
-    await new Promise(r => setTimeout(r, 4000));
-    await new Promise(r => setTimeout(r, 6000));
-    await new Promise(r => setTimeout(r, 8000));
-    await new Promise(r => setTimeout(r, 20000));
-    console.log("done")
+        const transformFunc = lightTransformLookup[argInfo.action] as TransformFunc;
+        await updateLights(transformFunc)
+    } else if (argInfo.action === ActionTypes.status) {
+        await printStatus();
+    }
 
 }
+
