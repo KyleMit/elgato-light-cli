@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { ElgatoEndpoint } from './types';
+import { discoverEndpoint } from './discovery';
 
 export const minBrightness = 3;
 export const maxBrightness = 100;
@@ -34,8 +35,10 @@ export async function loadConfig(): Promise<ElgatoEndpoint> {
       const fileContents = await fs.readFile(configFilePath, 'utf8');
       return JSON.parse(fileContents) as ElgatoEndpoint;
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-        return { ip: '', port: 0 };
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+          // if file doesn't exist yet, try to get it
+          const config = await discoverEndpoint();
+          return config;
       }
       throw error;
     }
