@@ -32,5 +32,6 @@ export enum ActionTypes {
     warmer = "warmer",
     colder = "colder",
     status = "status",
-    help = "help"
+    help = "help",
+    discover = "discover"
 }
