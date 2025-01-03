@@ -35,3 +35,9 @@ export enum ActionTypes {
     help = "help",
     discover = "discover"
 }
+
+
+export interface ElgatoEndpoint {
+    ip: string;
+    port: number;
+}
