@@ -4,12 +4,12 @@
   "description": "CLI to control Elgato Light",
   "main": "src/index.ts",
   "bin": {
-    "": "./src/index.ts",
-    "elg": "./src/index.ts"
+    "elg": "./src/index.ts",
+    "elgato-light-cli": "./src/index.ts"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "install": "npm i . -g",
+    "setup": "npm i . -g",
     "on": "elgato-light-cli on",
     "off": "elg off"
   },
