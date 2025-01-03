@@ -8,9 +8,26 @@ main()
 
 async function main() {
 
-    const argInfo = getArgAction()
+    const action = getArgAction()
 
-    if (argInfo.isTransform) {
+    if (action === ActionTypes.help) {
+        console.log(`Usage:
+  elg [command]
+  elgato-light-cli [command]
+
+Commands:
+  help       Display help for elgato-light-cli
+  status     Show the current status
+  off        Turn off the device
+  on         Turn on the device
+  dim        Decrease brightness
+  brighten   Increase brightness
+  colder     Shift color temperature cooler
+  warmer     Shift color temperature warmer
+`)
+    } else if (action === ActionTypes.status) {
+        await printStatus();
+    } else {
         const lightTransformLookup: Partial<Record<ActionTypes, TransformFunc>> = {
             [ActionTypes.off]: l => ({on: 0}),
             [ActionTypes.on]: l => ({ on: 1 }),
@@ -20,11 +37,9 @@ async function main() {
             [ActionTypes.warmer]: l => ({ temperature: Math.min(l.temperature + intervalTemperature, maxTemperature) })
         }
 
-        const transformFunc = lightTransformLookup[argInfo.action] as TransformFunc;
+        const transformFunc = lightTransformLookup[action] as TransformFunc;
         await updateLights(transformFunc)
-    } else if (argInfo.action === ActionTypes.status) {
-        await printStatus();
-    }
+    } 
 
 }
 
